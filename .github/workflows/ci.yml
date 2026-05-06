@@ -1,0 +1,208 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── PHP Tests ─────────────────────────────────────────────────────────────
+  test:
+    name: PHP Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Template
+    env:
+      APP_ENV: testing
+      APP_KEY: "base64:kzPY7a4SgaTU99WPLKwNQVBXjkDEi92Ot5I3+wXuLDk="
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      TELESCOPE_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo, pdo_sqlite, pcntl, mbstring
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: Template/vendor
+          key: composer-${{ hashFiles('Template/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run Pest
+        run: vendor/bin/pest --no-coverage
+
+  # ── PHP Lint ──────────────────────────────────────────────────────────────
+  lint:
+    name: PHP Lint (Pint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Template
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: Template/vendor
+          key: composer-${{ hashFiles('Template/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Check formatting
+        run: vendor/bin/pint --test
+
+  # ── Static Analysis ───────────────────────────────────────────────────────
+  analyse:
+    name: Static Analysis (PHPStan)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Template
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: Template/vendor
+          key: composer-${{ hashFiles('Template/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=512M
+
+  # ── Frontend ──────────────────────────────────────────────────────────────
+  frontend-build:
+    name: Frontend (pnpm install)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Template/client
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+        working-directory: .
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ hashFiles('Template/client/package.json') }}
+          restore-keys: pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+  # ── E2E ───────────────────────────────────────────────────────────────────
+  e2e:
+    name: E2E (Playwright API)
+    runs-on: ubuntu-latest
+    needs: [test]
+    env:
+      APP_ENV: testing
+      APP_KEY: "base64:kzPY7a4SgaTU99WPLKwNQVBXjkDEi92Ot5I3+wXuLDk="
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /tmp/laravel-e2e.sqlite
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      TELESCOPE_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo, pdo_sqlite, pcntl, mbstring
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: Template/vendor
+          key: composer-${{ hashFiles('Template/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install PHP dependencies
+        working-directory: Template
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Create SQLite file
+        run: touch /tmp/laravel-e2e.sqlite
+
+      - name: Migrate and seed
+        working-directory: Template
+        run: php artisan migrate:fresh --seed --force
+
+      - name: Start Laravel server
+        working-directory: Template
+        run: php artisan serve --host=0.0.0.0 --port=8000 &
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ hashFiles('Template/client/package.json') }}
+          restore-keys: pnpm-
+
+      - name: Install frontend dependencies
+        working-directory: Template/client
+        run: pnpm install --frozen-lockfile
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:8000/up --timeout 15000
+
+      - name: Run Playwright API tests
+        working-directory: Template/client
+        run: pnpm run e2e:api
