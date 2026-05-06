@@ -1,3 +1,6 @@
+# Internal tooling
+.nwave/
+
 # Laravel
 /vendor/
 .env
