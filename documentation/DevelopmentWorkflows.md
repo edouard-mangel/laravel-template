@@ -11,11 +11,9 @@ Day-to-day development commands and processes.
 docker compose -f docker/dev/docker-compose.yml up -d   # Postgres + Redis + Mailpit
 php artisan serve                                         # API on :8000
 php artisan horizon                                       # Queue worker
-cd client && pnpm start                                   # Angular on :4200
 
 # Verify everything is working
 php artisan test                                          # PHP tests
-cd client && pnpm test                                    # Frontend tests
 ```
 
 ---
@@ -139,15 +137,14 @@ php artisan test --bail || exit 1
 
 ## GitLab CI Pipeline
 
-See `templates/.gitlab-ci.yml` for the full pipeline. Summary:
+See `.github/workflows/ci.yml` for the full pipeline. Summary:
 
-| Stage | Jobs |
-|-------|------|
-| `build` | `composer install`, `pnpm install`, `pnpm build` |
-| `test` | Unit tests, Feature tests, Architecture tests, Vitest |
-| `quality` | Pint (format check), PHPStan, ESLint |
-| `package` | Docker image build + push to registry |
-| `deploy` | Deployment placeholder |
+| Job | What runs |
+|-----|-----------|
+| `test` | Pest (unit + feature + architecture) |
+| `lint` | Laravel Pint format check |
+| `analyse` | PHPStan Level 8 |
+| `e2e` | Playwright API tests against live server |
 
 ---
 
@@ -181,36 +178,24 @@ here — no emails actually leave the machine.
 
 ---
 
-## Frontend Development
+## E2E Tests
 
 ```bash
-cd client
+cd e2e
+npm install
 
-pnpm start                    # Dev server on :4200 with hot reload
-pnpm test                     # Vitest unit tests (watch mode)
-pnpm run test:ci              # Vitest (single run, no watch)
-pnpm run e2e:cypress          # Cypress integration tests
-pnpm run e2e:playwright       # Playwright E2E tests
-
-# Regenerate API types from Laravel OpenAPI spec
-pnpm run openapi              # Pulls from http://localhost:8000/api/documentation.json
+# Requires php artisan serve running on :8000
+npx playwright test --project=api
 ```
 
 ---
 
 ## Dependency Updates
 
-PHP:
 ```bash
-composer outdated              # View outdated packages
+composer outdated              # View outdated PHP packages
 composer update {package}      # Update a specific package
 ```
 
-JavaScript:
-```bash
-pnpm outdated                  # View outdated packages
-pnpm update {package}          # Update a specific package
-```
-
-After any PHP package update, run the full test suite. After any breaking change, update the
+After any package update, run the full test suite. After any breaking change, update the
 relevant entry in [`UPGRADING.md`](../UPGRADING.md).

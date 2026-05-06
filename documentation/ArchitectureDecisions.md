@@ -118,7 +118,7 @@ Some Laravel magic (dynamic relationships, macro) requires stubs.
 
 ## ADR-007: Laravel Sanctum for Authentication
 
-**Decision:** Use Laravel Sanctum with cookie-based SPA authentication for the Angular frontend.
+**Decision:** Use Laravel Sanctum for authentication — personal access tokens for API clients.
 
 **Alternatives considered:**
 - Laravel Passport (OAuth2 — too heavy for internal SPA)
@@ -189,52 +189,14 @@ container.
 
 ---
 
-## ADR-011: Angular 20 + PrimeNG 18 for Frontend
+## ADR-011: GitHub Actions CI/CD
 
-**Decision:** Use Angular 20 as the SPA framework with PrimeNG 18 for UI components.
-
-**Alternatives considered:**
-- Inertia.js + Vue 3 (tightly coupled to Laravel routing)
-- React + shadcn/ui
-- Livewire (server-rendered, no SPA)
-
-**Rationale:** Angular provides strong typing, a structured architecture, and the same team can
-maintain both backend and frontend. PrimeNG offers a comprehensive component library. Keeping the
-frontend decoupled from Laravel routing allows it to be replaced or evolved independently.
-
-**Trade-off:** Angular has more boilerplate than Vue or React. The Angular + Laravel setup requires
-CORS configuration and explicit Sanctum cookie handling.
-
----
-
-## ADR-012: openapi-typescript for Frontend API Types
-
-**Decision:** Generate TypeScript types from the Laravel API's OpenAPI spec using `openapi-typescript`.
+**Decision:** Use GitHub Actions for CI — lint, static analysis, unit/feature/architecture tests, and Playwright API E2E.
 
 **Alternatives considered:**
-- Manual type definitions (error-prone, quickly stale)
-- tRPC (tight coupling between frontend and backend)
-- GraphQL + code generation
+- GitLab CI (original template target)
+- CircleCI / Travis
 
-**Rationale:** The Laravel API is documented with `l5-swagger` or `scribe`. The generated OpenAPI
-spec drives TypeScript type generation, keeping frontend types in sync with backend responses.
+**Rationale:** The repo is on GitHub. Actions runs 4 parallel jobs (test, lint, analyse, e2e) with dependency caching, no external CI account needed.
 
-**Trade-off:** Requires running code generation after API changes. Types may lag during active
-development.
-
----
-
-## ADR-013: GitLab CI/CD
-
-**Decision:** Use GitLab CI with a 5-stage pipeline: build → test → quality → package → deploy.
-
-**Alternatives considered:**
-- GitHub Actions (would require migrating repository)
-- Jenkins (heavier setup)
-- Plain shell scripts
-
-**Rationale:** GitLab provides integrated CI, registry, and deployment in one platform. The
-pipeline structure mirrors the dotnet template for consistency across teams using both stacks.
-
-**Trade-off:** GitLab-specific YAML syntax. Teams on GitHub need to adapt the pipeline to GitHub
-Actions manually.
+**Trade-off:** GitHub-specific YAML. Teams on GitLab can adapt the pipeline using the root `.gitlab-ci.yml` as a reference.

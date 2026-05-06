@@ -1,7 +1,7 @@
 # Laravel Template
 
-A documentation-driven scaffolding template for AI agents and developers creating full-stack applications
-with **Laravel 12 + Angular 20**.
+A documentation-driven scaffolding template for AI agents and developers creating API applications
+with **Laravel 12**.
 
 > **This repository contains no runnable application.** It is a reference template: copy what you need,
 > adapt it to your project, and delete the rest.
@@ -21,7 +21,7 @@ with **Laravel 12 + Angular 20**.
 ## Stack
 
 **Backend**
-- PHP 8.3+ / Laravel 12.x
+- PHP 8.4+ / Laravel 12.x
 - PostgreSQL 17
 - Eloquent ORM (with custom repositories)
 - Laravel Horizon (queue management)
@@ -29,12 +29,8 @@ with **Laravel 12 + Angular 20**.
 - Pest PHP 3.x (testing)
 - PHPStan Level 8 + Laravel Pint (code quality)
 
-**Frontend**
-- Angular 20 + PrimeNG 18
-- TypeScript (strict mode)
-- pnpm 10.x
-- Vitest (unit) + Cypress (integration) + Playwright (E2E)
-- openapi-typescript (codegen from Laravel API)
+**E2E**
+- Playwright (API tests, no browser required)
 
 **Infrastructure**
 - Docker / Docker Compose
@@ -82,7 +78,6 @@ The dependency direction is strictly enforced:
 | [DomainEvents.md](documentation/DomainEvents.md) | Domain events + Laravel event system |
 | [SpecificationPattern.md](documentation/SpecificationPattern.md) | Composable query filters |
 | [Testing.md](documentation/Testing.md) | Pest PHP, factories, test strategy |
-| [Frontend.md](documentation/Frontend.md) | Angular 20 patterns |
 | [API.md](documentation/API.md) | REST endpoints, API Resources |
 | [Configuration.md](documentation/Configuration.md) | .env, config files, options |
 | [Observability.md](documentation/Observability.md) | Logging, Telescope, metrics |

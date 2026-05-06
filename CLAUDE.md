@@ -2,8 +2,8 @@
 
 ## Project Overview
 
-This is a **documentation-driven scaffolding template** for full-stack applications built with
-**Laravel 12 (PHP 8.4+) + Angular 20**. It contains no runnable application — only reference files,
+This is a **documentation-driven scaffolding template** for API applications built with
+**Laravel 12 (PHP 8.4+)**. It contains no runnable application — only reference files,
 patterns, and starter code to copy into a real project.
 
 **Your job when using this template:** read the documentation, copy the starter files, adapt them to
@@ -23,9 +23,8 @@ and in what order.
 | Queue | Laravel Horizon + Redis |
 | Testing | Pest PHP 3.x |
 | Code Quality | PHPStan Level 8, Laravel Pint |
-| Frontend | Angular 20 + PrimeNG 18 |
-| JS Testing | Vitest + Cypress + Playwright |
-| CI/CD | GitLab CI |
+| E2E Testing | Playwright (API tests) |
+| CI/CD | GitHub Actions |
 | Containers | Docker + Docker Compose |
 
 ---
@@ -80,9 +79,8 @@ Before writing any code, read these files **in this order**:
 15. [`documentation/Observability.md`](documentation/Observability.md) — logging and monitoring
 16. [`documentation/SeedData.md`](documentation/SeedData.md) — factories and seeders
 17. [`documentation/DevelopmentWorkflows.md`](documentation/DevelopmentWorkflows.md) — day-to-day commands
-18. [`documentation/Frontend.md`](documentation/Frontend.md) — Angular 20 patterns
-19. [`documentation/GettingStarted.md`](documentation/GettingStarted.md) — local setup
-20. [`templates/README.md`](templates/README.md) — starter files index
+18. [`documentation/GettingStarted.md`](documentation/GettingStarted.md) — local setup
+19. [`templates/README.md`](templates/README.md) — starter files index
 
 ---
 
@@ -108,7 +106,6 @@ cp .env.example .env
 
 ```bash
 composer install
-cd client && pnpm install && cd ..
 ```
 
 ### Step 4 — Start infrastructure
@@ -128,16 +125,14 @@ php artisan db:seed --class=DevDataSeeder
 ### Step 6 — Start the application
 
 ```bash
-php artisan serve          # Backend on :8000
+php artisan serve          # API on :8000
 php artisan horizon        # Queue worker
-cd client && pnpm start    # Frontend on :4200
 ```
 
 ### Step 7 — Verify everything works
 
 ```bash
 php artisan test           # Run Pest test suite
-cd client && pnpm test     # Run Vitest unit tests
 ```
 
 ### Step 8 — Delete the Product worked example
@@ -152,7 +147,6 @@ rm -rf app/Infrastructure/Persistence/Product
 rm -rf app/Http/Controllers/Product
 rm -rf tests/Unit/Product
 rm -rf tests/Feature/Product
-rm -rf client/src/app/features/product
 
 # Delete the migration and seeder
 # Remove from database/migrations/
@@ -250,16 +244,12 @@ php artisan test tests/Feature/            # Feature tests only
 ./vendor/bin/phpstan analyse               # Static analysis
 ```
 
-### Frontend
+### E2E Tests
 
 ```bash
-cd client
-pnpm start                                 # Dev server on :4200
-pnpm test                                  # Vitest unit tests
-pnpm run e2e:cypress                       # Cypress integration tests
-pnpm run e2e:playwright                    # Playwright E2E
-pnpm run build                             # Production build
-pnpm run openapi                           # Regenerate API types from Laravel
+cd e2e
+npm install
+npx playwright test --project=api          # Playwright API tests (requires php artisan serve)
 ```
 
 ---
@@ -446,15 +436,9 @@ tests/
     ├── ApplicationLayerTest.php
     └── NamingConventionTest.php
 
-client/                                 # Angular 20 SPA
-└── src/app/features/product/
-    ├── product.routes.ts
-    ├── models/product.model.ts
-    ├── services/
-    │   ├── product-reader.service.ts
-    │   ├── product-creator.service.ts
-    │   └── product-updator.service.ts
-    └── pages/
-        ├── product-list.page.ts
-        └── product-detail.page.ts
+e2e/                                    # Playwright API tests
+├── package.json
+├── playwright.config.ts
+└── api/
+    └── programs.spec.ts
 ```

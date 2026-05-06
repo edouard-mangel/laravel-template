@@ -8,10 +8,8 @@
 /public/storage
 bootstrap/cache/
 
-# Angular / Node
-client/node_modules/
-client/dist/
-client/.angular/
+# Node
+e2e/node_modules/
 *.local
 
 # IDE

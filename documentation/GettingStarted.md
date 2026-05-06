@@ -10,8 +10,7 @@ Local setup from scratch.
 |------|---------|---------|
 | PHP | 8.4+ | Runtime |
 | Composer | 2.x | PHP package manager |
-| Node.js | 22 LTS | JavaScript runtime |
-| pnpm | 10.x | JS package manager |
+| Node.js | 22 LTS | E2E tests only |
 | Docker + Compose | Latest | PostgreSQL, Redis, Mailpit |
 | Git | 2.x | Version control |
 
@@ -46,17 +45,7 @@ php artisan key:generate
 
 ---
 
-## Step 3: Install Frontend Dependencies
-
-```bash
-cd client
-pnpm install
-cd ..
-```
-
----
-
-## Step 4: Start Infrastructure
+## Step 3: Start Infrastructure
 
 ```bash
 docker compose -f docker/dev/docker-compose.yml up -d
@@ -88,24 +77,15 @@ This creates the schema and seeds development data (users, sample products).
 
 ## Step 6: Run the Application
 
-Open four terminals (or use a process manager):
-
 ```bash
 # Terminal 1: API server
 php artisan serve
 
 # Terminal 2: Queue worker
 php artisan horizon
-
-# Terminal 3: Angular frontend
-cd client && pnpm start
-
-# Terminal 4: File watcher (optional)
-php artisan queue:listen
 ```
 
 Access the application:
-- **Angular app**: http://localhost:4200
 - **API**: http://localhost:8000/api
 - **API docs**: http://localhost:8000/api/documentation
 - **Horizon**: http://localhost:8000/horizon
@@ -118,7 +98,6 @@ Access the application:
 
 ```bash
 php artisan test                    # All PHP tests should pass
-cd client && pnpm run test:ci       # All frontend tests should pass
 ```
 
 ---
@@ -147,14 +126,6 @@ docker compose -f docker/dev/docker-compose.yml logs postgres
 ```bash
 php artisan migrate:install
 php artisan migrate
-```
-
-**Angular fails to start:**
-```bash
-cd client
-rm -rf node_modules
-pnpm install
-pnpm start
 ```
 
 **Composer fails with PHP version error:**

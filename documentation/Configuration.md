@@ -32,7 +32,7 @@ REDIS_PORT=6379
 CACHE_STORE=redis
 
 # Sanctum
-SANCTUM_STATEFUL_DOMAINS=localhost:4200  # Angular dev server
+SANCTUM_STATEFUL_DOMAINS=localhost:3000  # API consumer dev URL
 SESSION_DOMAIN=localhost
 SESSION_SECURE_COOKIE=false             # true in production (HTTPS)
 
@@ -92,22 +92,22 @@ $this->app->singleton(DatabaseOptions::class, fn () => DatabaseOptions::fromConf
 | `config/database.php` | Database connections |
 | `config/queue.php` | Queue connections and defaults |
 | `config/sanctum.php` | Stateful domains, expiration |
-| `config/cors.php` | CORS allowed origins (for Angular frontend) |
+| `config/cors.php` | CORS allowed origins for API consumers |
 | `config/horizon.php` | Horizon queue workers and balancing |
 | `config/logging.php` | Log channels and levels |
 
 ---
 
-## CORS for Angular Frontend
+## CORS for API Consumers
 
-The Angular frontend runs on a different port during development. Configure CORS in `config/cors.php`:
+Configure allowed origins in `config/cors.php`:
 
 ```php
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [
-        'http://localhost:4200',     // Angular dev server
+        env('FRONTEND_URL', 'http://localhost:3000'),
         env('APP_URL'),              // Production URL
     ],
     'allowed_headers' => ['*'],
@@ -121,7 +121,7 @@ return [
 
 ## Sanctum (SPA Authentication)
 
-Sanctum handles cookie-based authentication for the Angular SPA.
+Sanctum handles both token-based authentication (Bearer tokens) and cookie-based SPA authentication.
 
 ```php
 // config/sanctum.php

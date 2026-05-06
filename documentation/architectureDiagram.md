@@ -143,10 +143,9 @@ ProductResource::collection()      ← JSON response shaping
 └─────────────┘                                            │
                                                            │
                    ┌───────────────────────────────────────▼─┐
-                   │             Angular SPA                   │
-                   │  (TypeScript, PrimeNG, :4200 in dev)      │
+                   │             API Consumers                 │
+                   │  (any HTTP client — REST + Sanctum)       │
                    └──────────────────────────────────────────┘
-                   (communicates via REST + Sanctum cookies)
 ```
 
 ---
@@ -158,5 +157,4 @@ ProductResource::collection()      ← JSON response shaping
 | Architecture | Pest `arch()` | Instant | No DB |
 | Unit | Domain value objects, aggregates | Instant | No DB |
 | Feature | Full HTTP stack with in-memory SQLite | Fast | SQLite |
-| E2E (Cypress) | Angular + API integration | Slow | Real DB |
-| E2E (Playwright) | Full browser flow by role | Slowest | Real DB |
+| E2E (Playwright API) | Full HTTP cycle against live server | Slow | Real DB (SQLite file) |

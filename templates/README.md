@@ -1,6 +1,6 @@
 # Templates
 
-Copy-paste starter files for a new Laravel + Angular project. Every file here is intentionally
+Copy-paste starter files for a new Laravel API project. Every file here is intentionally
 standalone — copy, rename, and adapt. Do not symlink or inherit from this template.
 
 ---
@@ -11,7 +11,7 @@ standalone — copy, rename, and adapt. Do not symlink or inherit from this temp
 templates/
 ├── .editorconfig                   # PHP + JS formatting rules
 ├── .gitattributes                  # LF line endings
-├── .gitignore                      # PHP, Laravel, Angular, IDE ignores
+├── .gitignore                      # PHP, Laravel, Node, IDE ignores
 ├── .env.example                    # Environment variable template
 ├── .gitlab-ci.yml                  # Full CI pipeline (5 stages)
 ├── artisan                         # Laravel CLI entry point
@@ -28,7 +28,7 @@ templates/
 │   ├── app.php
 │   ├── auth.php
 │   ├── cache.php
-│   ├── cors.php                    # CRITICAL: CORS for Angular frontend
+│   ├── cors.php                    # CRITICAL: CORS for API consumers
 │   ├── database.php
 │   ├── logging.php                 # CRITICAL: log channel definitions
 │   ├── queue.php
@@ -137,16 +137,11 @@ templates/
 │   │   └── docker-compose.yml      # Production reference
 │   └── Dockerfile                  # PHP-FPM + Nginx multi-stage
 │
-└── client/                         # Angular 20 SPA (copy verbatim)
+└── e2e/                            # Playwright API tests
     ├── package.json
-    ├── angular.json
-    ├── tsconfig.json
-    ├── vitest.config.ts
-    ├── cypress.config.ts
     ├── playwright.config.ts
-    └── src/app/
-        ├── core/                   # Auth, interceptors
-        └── features/product/       # WORKED EXAMPLE — delete after understanding
+    └── api/
+        └── programs.spec.ts        # WORKED EXAMPLE — replace with your domain
 ```
 
 ---
@@ -174,7 +169,7 @@ rm -rf database/migrations/2026_01_01_000001_create_products_table.php
 rm -rf database/factories/ProductFactory.php
 rm -rf tests/Unit/Product
 rm -rf tests/Feature/Product
-rm -rf client/src/app/features/product
+rm -rf e2e/api/programs.spec.ts
 ```
 
 ### Step 3: Update `composer.json`
@@ -199,7 +194,7 @@ php artisan migrate
 | Package | Version | Purpose |
 |---------|---------|---------|
 | `laravel/framework` | `^12.0` | Framework |
-| `laravel/sanctum` | `^4.0` | SPA authentication |
+| `laravel/sanctum` | `^4.0` | API token + cookie authentication |
 | `laravel/horizon` | `^5.0` | Queue management |
 | `laravel/telescope` | `^5.0` | Debugging (dev only) |
 | `pestphp/pest` | `^3.0` | Testing |
@@ -211,13 +206,8 @@ php artisan migrate
 
 ---
 
-## JavaScript Dependency Versions (client/package.json)
+## E2E Dependency Versions (e2e/package.json)
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `@angular/core` | `~20.0.0` | Framework |
-| `primeng` | `~18.0.0` | UI components |
-| `openapi-typescript` | `^7.0.0` | API type generation |
-| `vitest` | `^2.0.0` | Unit testing |
-| `cypress` | `^13.0.0` | Integration testing |
-| `@playwright/test` | `^1.45.0` | E2E testing |
+| `@playwright/test` | `^1.45.0` | API E2E tests |

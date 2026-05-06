@@ -9,9 +9,9 @@ test data.
 
 ```
                     ┌─────────┐
-                    │   E2E   │  Playwright (Angular frontend)
+                    │   E2E   │  Playwright (API tests)
                    ┌┴─────────┴┐
-                   │Integration│  Cypress (Angular + API)
+                   │Integration│  Playwright API project
                   ┌┴───────────┴┐
                   │   Feature   │  Pest (HTTP layer, full stack)
                  ┌┴─────────────┴┐

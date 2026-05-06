@@ -46,17 +46,6 @@ This template targets Laravel 12 from the start. No migration needed for new pro
 
 ---
 
-## Angular 19 → 20
-
-See [Frontend.md](documentation/Frontend.md) for current Angular 20 patterns. Key changes from Angular 19:
-
-1. Signals API is stable — use `signal()` and `computed()` for reactive state
-2. `@defer` blocks replace `*ngIf` lazy-loading patterns
-3. Standalone components are the default — no `NgModule` required
-4. `inject()` function preferred over constructor injection
-
----
-
 ## Scaffolding Lessons (discovered during Template/ build)
 
 These corrections are already applied in `Template/`. Document them here so future aggregates
@@ -119,7 +108,7 @@ Always create this base seeder that orchestrates the rest.
 ## Dependency Version Policy
 
 All PHP packages are pinned in `composer.json`. All JS packages are pinned in `package.json` with a
-`pnpm-lock.yaml` lockfile. Do not use `^` version ranges for core framework packages — pin exactly.
+`package-lock.json` or `pnpm-lock.yaml` lockfile. Do not use `^` version ranges for core framework packages — pin exactly.
 
 When this template is updated to use newer versions, the `composer.json` and `package.json` in
 `templates/` will reflect the new versions. Projects should update selectively, not by blindly pulling

@@ -214,15 +214,15 @@ Pagination response format (automatic when returning a `LengthAwarePaginator`):
 ## OpenAPI Documentation
 
 Use `darkaonline/l5-swagger` or `knuckleswtf/scribe` to generate an OpenAPI spec from PHPDoc
-annotations. The spec is consumed by `openapi-typescript` to generate Angular client types.
+annotations. The spec can be consumed by `openapi-typescript` or any OpenAPI client generator.
 
 ```bash
 php artisan l5-swagger:generate   # Generate spec
 # Access at: http://localhost:8000/api/documentation
 ```
 
-The Angular frontend has a script to pull the latest spec:
+Download the spec:
 
 ```bash
-cd client && pnpm run openapi   # Regenerates src/app/api/types.ts
+curl http://localhost:8000/api/documentation.json -o openapi.json
 ```
