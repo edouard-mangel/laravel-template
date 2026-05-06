@@ -1,0 +1,177 @@
+image: php:8.3-fpm
+
+stages:
+  - build
+  - test
+  - quality
+  - package
+  - deploy
+
+variables:
+  COMPOSER_CACHE_DIR: "$CI_PROJECT_DIR/.composer-cache"
+  PNPM_CACHE_DIR: "$CI_PROJECT_DIR/.pnpm-cache"
+
+.php_cache: &php_cache
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - .composer-cache/
+      - vendor/
+
+.pnpm_cache: &pnpm_cache
+  cache:
+    key:
+      files:
+        - client/pnpm-lock.yaml
+    paths:
+      - .pnpm-cache/
+      - client/node_modules/
+
+# ─── BUILD ────────────────────────────────────────────────────────────────────
+
+build:backend:
+  stage: build
+  <<: *php_cache
+  script:
+    - composer install --no-interaction --no-progress --prefer-dist
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 1 hour
+
+build:frontend:
+  stage: build
+  image: node:22-alpine
+  <<: *pnpm_cache
+  script:
+    - npm install -g pnpm
+    - cd client && pnpm install --frozen-lockfile
+    - pnpm run build
+  artifacts:
+    paths:
+      - client/dist/
+      - client/node_modules/
+    expire_in: 1 hour
+
+# ─── TEST ─────────────────────────────────────────────────────────────────────
+
+test:unit:
+  stage: test
+  <<: *php_cache
+  needs: [build:backend]
+  script:
+    - cp .env.testing .env
+    - ./vendor/bin/pest tests/Unit tests/Architecture --coverage-cobertura=coverage-unit.xml
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage-unit.xml
+
+test:feature:
+  stage: test
+  <<: *php_cache
+  needs: [build:backend]
+  services:
+    - postgres:17-alpine
+  variables:
+    DB_CONNECTION: pgsql
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_DATABASE: testing
+    DB_USERNAME: postgres
+    DB_PASSWORD: postgres
+    POSTGRES_DB: testing
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    QUEUE_CONNECTION: sync
+  script:
+    - cp .env.testing .env
+    - php artisan migrate --env=testing
+    - ./vendor/bin/pest tests/Feature --coverage-cobertura=coverage-feature.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage-feature.xml
+
+test:frontend:unit:
+  stage: test
+  image: node:22-alpine
+  <<: *pnpm_cache
+  needs: [build:frontend]
+  script:
+    - cd client && pnpm run test:ci
+
+# ─── QUALITY ──────────────────────────────────────────────────────────────────
+
+quality:pint:
+  stage: quality
+  <<: *php_cache
+  needs: [build:backend]
+  script:
+    - ./vendor/bin/pint --test
+
+quality:phpstan:
+  stage: quality
+  <<: *php_cache
+  needs: [build:backend]
+  script:
+    - ./vendor/bin/phpstan analyse --memory-limit=512M
+
+quality:eslint:
+  stage: quality
+  image: node:22-alpine
+  <<: *pnpm_cache
+  needs: [build:frontend]
+  script:
+    - cd client && pnpm run lint
+
+# ─── PACKAGE ──────────────────────────────────────────────────────────────────
+
+package:docker:
+  stage: package
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs: [test:unit, test:feature, quality:pint, quality:phpstan]
+  only:
+    - main
+    - /^release\/.*/
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" -f docker/Dockerfile .
+    - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+
+# ─── DEPLOY ───────────────────────────────────────────────────────────────────
+
+deploy:staging:
+  stage: deploy
+  needs: [package:docker]
+  only:
+    - main
+  environment:
+    name: staging
+    url: https://staging.example.com
+  script:
+    - echo "Deploy to staging — configure for your infrastructure"
+    # Example: kubectl set image deployment/app app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+deploy:production:
+  stage: deploy
+  needs: [package:docker]
+  only:
+    - /^release\/.*/
+  when: manual
+  environment:
+    name: production
+    url: https://app.example.com
+  script:
+    - echo "Deploy to production — manual gate"
