@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+STAGED_PHP=$(git diff --cached --name-only --diff-filter=ACM | grep '\.php$' || true)
+
+if [ -n "$STAGED_PHP" ]; then
+    echo "Running Pint on staged PHP files..."
+    ./vendor/bin/pint $STAGED_PHP
+    git add $STAGED_PHP
+fi

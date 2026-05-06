@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+*.php diff=php
+*.css linguist-vendored
+*.scss linguist-vendored
+*.js linguist-vendored
+resources/** linguist-vendored

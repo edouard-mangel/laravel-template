@@ -1,0 +1,39 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e:cypress": "cypress run",
+    "e2e:playwright": "playwright test",
+    "openapi": "openapi-typescript http://localhost:8000/api/documentation.json -o src/app/api/types.ts"
+  },
+  "dependencies": {
+    "@angular/animations": "~20.0.0",
+    "@angular/common": "~20.0.0",
+    "@angular/compiler": "~20.0.0",
+    "@angular/core": "~20.0.0",
+    "@angular/forms": "~20.0.0",
+    "@angular/platform-browser": "~20.0.0",
+    "@angular/platform-browser-dynamic": "~20.0.0",
+    "@angular/router": "~20.0.0",
+    "primeng": "~18.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.6.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~20.0.0",
+    "@angular/cli": "~20.0.0",
+    "@angular/compiler-cli": "~20.0.0",
+    "@playwright/test": "^1.45.0",
+    "@vitest/coverage-v8": "^2.0.0",
+    "cypress": "^13.0.0",
+    "jsdom": "^24.0.0",
+    "openapi-typescript": "^7.0.0",
+    "typescript": "~5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

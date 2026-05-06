@@ -1,0 +1,28 @@
+/vendor/
+/node_modules/
+.env
+.env.*
+!.env.example
+/storage/*.key
+/public/hot
+/public/storage
+bootstrap/cache/
+
+# Angular / Node
+client/node_modules/
+client/dist/
+client/.angular/
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+/coverage/
+/.phpunit.cache/

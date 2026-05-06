@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: docker/Dockerfile
+    environment:
+      APP_ENV: production
+      APP_KEY: "${APP_KEY}"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE}"
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      REDIS_HOST: redis
+      QUEUE_CONNECTION: redis
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "80:80"
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: "${DB_DATABASE}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
