@@ -14,10 +14,32 @@ templates/
 ├── .gitignore                      # PHP, Laravel, Angular, IDE ignores
 ├── .env.example                    # Environment variable template
 ├── .gitlab-ci.yml                  # Full CI pipeline (5 stages)
+├── artisan                         # Laravel CLI entry point
 ├── composer.json                   # PHP dependencies (pinned versions)
 ├── phpstan.neon                    # PHPStan Level 8 configuration
 ├── phpunit.xml                     # Pest/PHPUnit configuration
 ├── pint.json                       # Laravel Pint formatting rules
+│
+├── bootstrap/
+│   ├── app.php                     # Application bootstrap (Laravel 12+ style)
+│   └── providers.php               # Service provider list
+│
+├── config/
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── cors.php                    # CRITICAL: CORS for Angular frontend
+│   ├── database.php
+│   ├── logging.php                 # CRITICAL: log channel definitions
+│   ├── queue.php
+│   ├── sanctum.php                 # CRITICAL: stateful domain config
+│   └── session.php                 # CRITICAL: required by Sanctum auth
+│
+├── public/
+│   └── index.php                   # HTTP entry point
+│
+├── routes/
+│   └── api.php                     # API routes (auth:sanctum group)
 │
 ├── app/
 │   ├── Domain/
@@ -41,6 +63,8 @@ templates/
 │   │
 │   ├── Application/
 │   │   ├── Contracts/
+│   │   │   ├── Finders/
+│   │   │   │   └── ProductFinderInterface.php      # Read-only query interface
 │   │   │   └── Repositories/
 │   │   │       └── ProductRepositoryInterface.php
 │   │   └── Product/
@@ -81,10 +105,13 @@ templates/
 │
 ├── database/
 │   ├── migrations/
+│   │   ├── 2026_01_01_000000_create_users_table.php
 │   │   └── 2026_01_01_000001_create_products_table.php
 │   ├── factories/
+│   │   ├── UserFactory.php
 │   │   └── ProductFactory.php
 │   └── seeders/
+│       ├── DatabaseSeeder.php      # Entry point for php artisan db:seed
 │       └── DevDataSeeder.php
 │
 ├── tests/
@@ -167,6 +194,8 @@ php artisan migrate
 
 ## PHP Dependency Versions (composer.json)
 
+> PHP 8.4+ required — the resolved package set as of 2026 requires PHP 8.4. See UPGRADING.md.
+
 | Package | Version | Purpose |
 |---------|---------|---------|
 | `laravel/framework` | `^12.0` | Framework |
@@ -175,6 +204,7 @@ php artisan migrate
 | `laravel/telescope` | `^5.0` | Debugging (dev only) |
 | `pestphp/pest` | `^3.0` | Testing |
 | `pestphp/pest-plugin-laravel` | `^3.0` | Laravel Pest plugin |
+| `mockery/mockery` | `^1.6` | Test mocking (required by Laravel test helpers) |
 | `larastan/larastan` | `^3.0` | PHPStan for Laravel |
 | `laravel/pint` | `^1.0` | Code formatting |
 | `darkaonline/l5-swagger` | `^9.0` | OpenAPI generation |

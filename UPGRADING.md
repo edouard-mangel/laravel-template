@@ -14,6 +14,9 @@ dependency in your project, consult this file for any template-level changes tha
 
 ## PHP 8.3 → 8.4
 
+**Required upgrade** — The resolved Laravel 12 package set (as of 2026) requires PHP 8.4+. Projects
+scaffolded from this template must run PHP 8.4 or later. `composer.json` declares `"php": "^8.4"`.
+
 **Readonly properties promotion** — PHP 8.4 adds property hooks. Value objects using readonly classes
 are unaffected, but you may wish to replace custom `__get` magic with property hooks.
 
@@ -51,6 +54,65 @@ See [Frontend.md](documentation/Frontend.md) for current Angular 20 patterns. Ke
 2. `@defer` blocks replace `*ngIf` lazy-loading patterns
 3. Standalone components are the default — no `NgModule` required
 4. `inject()` function preferred over constructor injection
+
+---
+
+## Scaffolding Lessons (discovered during Template/ build)
+
+These corrections are already applied in `Template/`. Document them here so future aggregates
+get them right from the start.
+
+### 1. `readonly class` can only extend `readonly class`
+
+PHP 8.2+ enforces that a `readonly` class can only extend another `readonly` class.
+`ValueObject` must be declared `abstract readonly`:
+
+```php
+// WRONG
+abstract class ValueObject {}
+
+// CORRECT
+abstract readonly class ValueObject {}
+```
+
+### 2. Finders need an interface in the Application layer
+
+`GetProductByIdQuery` and `GetProductsQuery` must not import `ProductFinder` directly from
+Infrastructure — that breaks the dependency rule. The fix is a finder interface in Application:
+
+```
+app/Application/Contracts/Finders/ProductFinderInterface.php   ← declare here
+app/Infrastructure/Persistence/Product/ProductFinder.php       ← implement here
+app/Infrastructure/Providers/InfrastructureServiceProvider.php ← bind here
+```
+
+### 3. `newFactory()` override required for non-standard model paths
+
+Eloquent's `HasFactory` trait resolves factory names from model class paths. Models in
+`App\Infrastructure\Persistence\` will not be found automatically. Always override:
+
+```php
+protected static function newFactory(): ProductFactory
+{
+    return ProductFactory::new();
+}
+```
+
+### 4. Critical config files required at boot
+
+These must exist or Laravel will error on first request:
+
+| File | Why critical |
+|------|-------------|
+| `config/session.php` | Sanctum stateful auth reads from this |
+| `config/cors.php` | Cross-origin from Angular (`:4200 → :8000`) |
+| `config/logging.php` | Log channel resolution fails without it |
+| `config/sanctum.php` | Token config and stateful domains |
+
+### 5. `DatabaseSeeder.php` is the entry point
+
+`php artisan db:seed` calls `DatabaseSeeder::run()`, not individual seeders.
+Always create this base seeder that orchestrates the rest.
 
 ---
 

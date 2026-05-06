@@ -8,7 +8,7 @@ Local setup from scratch.
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| PHP | 8.3+ | Runtime |
+| PHP | 8.4+ | Runtime |
 | Composer | 2.x | PHP package manager |
 | Node.js | 22 LTS | JavaScript runtime |
 | pnpm | 10.x | JS package manager |
@@ -79,7 +79,7 @@ docker compose -f docker/dev/docker-compose.yml ps
 
 ```bash
 php artisan migrate
-php artisan db:seed --class=DevDataSeeder
+php artisan db:seed          # runs DatabaseSeeder → DevDataSeeder
 ```
 
 This creates the schema and seeds development data (users, sample products).
@@ -159,7 +159,7 @@ pnpm start
 
 **Composer fails with PHP version error:**
 ```bash
-php --version              # Must be 8.3+
+php --version              # Must be 8.4+
 composer check-platform-reqs
 ```
 

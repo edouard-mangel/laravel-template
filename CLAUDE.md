@@ -3,7 +3,7 @@
 ## Project Overview
 
 This is a **documentation-driven scaffolding template** for full-stack applications built with
-**Laravel 12 (PHP 8.3+) + Angular 20**. It contains no runnable application — only reference files,
+**Laravel 12 (PHP 8.4+) + Angular 20**. It contains no runnable application — only reference files,
 patterns, and starter code to copy into a real project.
 
 **Your job when using this template:** read the documentation, copy the starter files, adapt them to
@@ -16,7 +16,7 @@ and in what order.
 
 | Layer | Technology |
 |-------|-----------|
-| Language | PHP 8.3+ |
+| Language | PHP 8.4+ |
 | Framework | Laravel 12.x |
 | Database | PostgreSQL 17 via Eloquent ORM |
 | Authentication | Laravel Sanctum (JWT-style SPA auth) |
