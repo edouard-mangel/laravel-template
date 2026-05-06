@@ -139,7 +139,7 @@ jobs:
   e2e:
     name: E2E (Playwright API)
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [frontend-build]
     env:
       APP_ENV: testing
       APP_KEY: "base64:kzPY7a4SgaTU99WPLKwNQVBXjkDEi92Ot5I3+wXuLDk="
