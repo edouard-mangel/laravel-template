@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Providers;
 
-use App\Application\Contracts\Finders\ProductFinderInterface;
-use App\Application\Contracts\Repositories\ProductRepositoryInterface;
-use App\Infrastructure\Persistence\Product\ProductFinder;
-use App\Infrastructure\Persistence\Product\ProductRepository;
+use App\Application\Contracts\Finders\ProgramFinderInterface;
+use App\Application\Contracts\Repositories\ProgramRepositoryInterface;
+use App\Infrastructure\Persistence\Program\ProgramFinder;
+use App\Infrastructure\Persistence\Program\ProgramRepository;
 use Illuminate\Support\ServiceProvider;
 
 final class InfrastructureServiceProvider extends ServiceProvider
@@ -15,13 +15,13 @@ final class InfrastructureServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            ProductRepositoryInterface::class,
-            ProductRepository::class,
+            ProgramRepositoryInterface::class,
+            ProgramRepository::class,
         );
 
         $this->app->bind(
-            ProductFinderInterface::class,
-            ProductFinder::class,
+            ProgramFinderInterface::class,
+            ProgramFinder::class,
         );
     }
 }

@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence\Program;
+
+use App\Application\Contracts\Finders\ProgramFinderInterface;
+use App\Application\Program\ProgramDto;
+use App\Application\Program\ProgramFilter;
+use App\Domain\Program\ProgramId;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+final class ProgramFinder implements ProgramFinderInterface
+{
+    public function findById(ProgramId $id): ?ProgramDto
+    {
+        $model = ProgramEloquentModel::find((string) $id);
+
+        return $model !== null ? $this->toDto($model) : null;
+    }
+
+    public function findAll(ProgramFilter $filter): LengthAwarePaginator
+    {
+        $query = ProgramEloquentModel::query();
+
+        if ($filter->genre !== null) {
+            $query->where('genre', $filter->genre);
+        }
+
+        return $query
+            ->orderBy('created_at', 'desc')
+            ->paginate($filter->perPage, ['*'], 'page', $filter->page);
+    }
+
+    private function toDto(ProgramEloquentModel $model): ProgramDto
+    {
+        return new ProgramDto(
+            id: $model->id,
+            title: $model->title,
+            description: $model->description,
+            durationMinutes: $model->duration_minutes,
+            genre: $model->genre,
+            ownerId: $model->owner_id,
+            createdAt: $model->created_at->toDateTimeImmutable(),
+        );
+    }
+}
