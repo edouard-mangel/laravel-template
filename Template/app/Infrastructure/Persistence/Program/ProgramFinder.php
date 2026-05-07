@@ -28,9 +28,11 @@ final class ProgramFinder implements ProgramFinderInterface
             $query->where('genre', $filter->genre);
         }
 
+        /** @var LengthAwarePaginator<int, ProgramDto> */
         return $query
             ->orderBy('created_at', 'desc')
-            ->paginate($filter->perPage, ['*'], 'page', $filter->page);
+            ->paginate($filter->perPage, ['*'], 'page', $filter->page)
+            ->through(fn (ProgramEloquentModel $model) => $this->toDto($model));
     }
 
     private function toDto(ProgramEloquentModel $model): ProgramDto
@@ -42,7 +44,7 @@ final class ProgramFinder implements ProgramFinderInterface
             durationMinutes: $model->duration_minutes,
             genre: $model->genre,
             ownerId: $model->owner_id,
-            createdAt: $model->created_at->toDateTimeImmutable(),
+            createdAt: $model->created_at?->toDateTimeImmutable() ?? new \DateTimeImmutable,
         );
     }
 }

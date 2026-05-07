@@ -21,7 +21,7 @@ final class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Feature::define('new-dashboard', fn (UserEloquentModel $user): bool => $user->created_at->isAfter(now()->subDays(30))
+        Feature::define('new-dashboard', fn (UserEloquentModel $user): bool => $user->created_at?->isAfter(now()->subDays(30)) ?? false
         );
 
         Feature::define('beta-export', Lottery::odds(1, 5));

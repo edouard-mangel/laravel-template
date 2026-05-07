@@ -6,5 +6,4 @@ parameters:
     paths:
         - app
     excludePaths:
-    ignoreErrors:
-        - '#Unsafe usage of new static\(\)#'
+    ignoreErrors: []
