@@ -24,7 +24,7 @@ jobs:
       SESSION_DRIVER: array
       TELESCOPE_ENABLED: "false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP 8.4
         uses: shivammathur/setup-php@v2
@@ -57,7 +57,7 @@ jobs:
       run:
         working-directory: Template
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP 8.4
         uses: shivammathur/setup-php@v2
@@ -87,7 +87,7 @@ jobs:
       run:
         working-directory: Template
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP 8.4
         uses: shivammathur/setup-php@v2
@@ -126,7 +126,7 @@ jobs:
       SESSION_DRIVER: array
       TELESCOPE_ENABLED: "false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP 8.4
         uses: shivammathur/setup-php@v2
