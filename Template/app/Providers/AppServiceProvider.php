@@ -6,7 +6,10 @@ namespace App\Providers;
 
 use App\Http\Services\AccessContext;
 use App\Infrastructure\Providers\InfrastructureServiceProvider;
+use App\Infrastructure\Persistence\User\UserEloquentModel;
+use Illuminate\Support\Lottery;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Pennant\Feature;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -16,5 +19,12 @@ final class AppServiceProvider extends ServiceProvider
         $this->app->register(InfrastructureServiceProvider::class);
     }
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        Feature::define('new-dashboard', fn (UserEloquentModel $user): bool =>
+            $user->created_at->isAfter(now()->subDays(30))
+        );
+
+        Feature::define('beta-export', Lottery::odds(1, 5));
+    }
 }
