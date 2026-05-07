@@ -6,6 +6,5 @@ parameters:
     paths:
         - app
     excludePaths:
-    checkMissingIterableValueType: false
     ignoreErrors:
         - '#Unsafe usage of new static\(\)#'
