@@ -37,7 +37,7 @@ final class ProgramRepository implements ProgramRepositoryInterface
 
     public function delete(ProgramId $id): void
     {
-        ProgramEloquentModel::withoutGlobalScopes()->destroy((string) $id);
+        ProgramEloquentModel::withoutGlobalScopes()->where('id', (string) $id)->delete();
     }
 
     private function toDomain(ProgramEloquentModel $model): Program

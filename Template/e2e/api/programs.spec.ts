@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Programs API', () => {
+// Tests are sequential — each test depends on state from the previous one.
+test.describe.serial('Programs API', () => {
   let token: string;
   let programId: string;
 
@@ -38,10 +39,11 @@ test.describe('Programs API', () => {
 
     expect(res.status()).toBe(200);
     const body = await res.json();
-    expect(body.title).toBe('Planet Earth III');
-    expect(body.genre).toBe('documentary');
-    expect(body.duration_minutes).toBe(60);
-    expect(body.description).toBe('A stunning nature documentary series.');
+    // Laravel JsonResource wraps single resources in { data: { ... } }
+    expect(body.data.title).toBe('Planet Earth III');
+    expect(body.data.genre).toBe('documentary');
+    expect(body.data.duration_minutes).toBe(60);
+    expect(body.data.description).toBe('A stunning nature documentary series.');
   });
 
   test('lists programs with pagination meta', async ({ request }) => {
@@ -75,8 +77,8 @@ test.describe('Programs API', () => {
 
     expect(res.status()).toBe(200);
     const body = await res.json();
-    expect(body.title).toBe('Planet Earth III (Extended)');
-    expect(body.duration_minutes).toBe(75);
+    expect(body.data.title).toBe('Planet Earth III (Extended)');
+    expect(body.data.duration_minutes).toBe(75);
   });
 
   test('deletes the program', async ({ request }) => {
