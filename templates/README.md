@@ -13,7 +13,9 @@ templates/
 ├── .gitattributes                  # LF line endings
 ├── .gitignore                      # PHP, Laravel, Node, IDE ignores
 ├── .env.example                    # Environment variable template
-├── .gitlab-ci.yml                  # Full CI pipeline (5 stages)
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # GitHub Actions CI (test, lint, analyse, e2e)
 ├── artisan                         # Laravel CLI entry point
 ├── composer.json                   # PHP dependencies (pinned versions)
 ├── phpstan.neon                    # PHPStan Level 8 configuration
@@ -191,6 +193,16 @@ cp .env.example .env
 php artisan key:generate
 docker compose -f docker/dev/docker-compose.yml up -d
 php artisan migrate
+```
+
+### Step 5: Add the GitHub Actions secret
+
+The CI pipeline reads `APP_KEY` from a GitHub secret. Add it once:
+
+```
+GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+Name: APP_KEY
+Value: (paste the value of APP_KEY from your .env after key:generate)
 ```
 
 ---
