@@ -41,7 +41,7 @@ jobs:
           restore-keys: composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Run Pest
         run: vendor/bin/pest --no-coverage
@@ -71,7 +71,7 @@ jobs:
           restore-keys: composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Check formatting
         run: vendor/bin/pint --test
@@ -101,7 +101,7 @@ jobs:
           restore-keys: composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --memory-limit=512M
@@ -138,7 +138,7 @@ jobs:
 
       - name: Install PHP dependencies
         working-directory: Template
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Create SQLite file
         run: touch /tmp/laravel-e2e.sqlite
