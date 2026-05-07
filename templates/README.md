@@ -51,76 +51,81 @@ templates/
 │   │   │       ├── DomainException.php
 │   │   │       ├── InvalidInputException.php    # User input errors → 422
 │   │   │       └── ResourceNotFoundException.php # Not found → 404
-│   │   └── Product/                # WORKED EXAMPLE — delete after understanding
-│   │       ├── Product.php
-│   │       ├── ProductId.php
-│   │       ├── ProductName.php
-│   │       ├── ProductSku.php
-│   │       ├── ProductPrice.php
+│   │   └── Program/                # WORKED EXAMPLE — delete after understanding
+│   │       ├── Program.php
+│   │       ├── ProgramId.php
+│   │       ├── ProgramTitle.php
+│   │       ├── ProgramDescription.php
+│   │       ├── ProgramDuration.php
+│   │       ├── ProgramGenre.php
 │   │       └── Events/
-│   │           ├── ProductCreated.php
-│   │           └── ProductUpdated.php
+│   │           ├── ProgramCreated.php
+│   │           └── ProgramUpdated.php
 │   │
 │   ├── Application/
 │   │   ├── Contracts/
 │   │   │   ├── Finders/
-│   │   │   │   └── ProductFinderInterface.php      # Read-only query interface
+│   │   │   │   └── ProgramFinderInterface.php      # Read-only query interface
 │   │   │   └── Repositories/
-│   │   │       └── ProductRepositoryInterface.php
-│   │   └── Product/
-│   │       ├── ProductDto.php
-│   │       ├── CreateProductData.php
-│   │       ├── UpdateProductData.php
-│   │       ├── ProductFilter.php
+│   │   │       └── ProgramRepositoryInterface.php
+│   │   └── Program/
+│   │       ├── ProgramDto.php
+│   │       ├── CreateProgramData.php
+│   │       ├── UpdateProgramData.php
+│   │       ├── ProgramFilter.php
 │   │       ├── Actions/
-│   │       │   ├── CreateProductAction.php
-│   │       │   ├── UpdateProductAction.php
-│   │       │   └── DeleteProductAction.php
+│   │       │   ├── CreateProgramAction.php
+│   │       │   ├── UpdateProgramAction.php
+│   │       │   └── DeleteProgramAction.php
 │   │       └── Queries/
-│   │           ├── GetProductByIdQuery.php
-│   │           └── GetProductsQuery.php
+│   │           ├── GetProgramByIdQuery.php
+│   │           └── GetProgramsQuery.php
 │   │
 │   ├── Infrastructure/
 │   │   ├── Persistence/
 │   │   │   ├── Scopes/
 │   │   │   │   └── OwnerScope.php  # Ownership-based global scope
-│   │   │   └── Product/
-│   │   │       ├── ProductEloquentModel.php
-│   │   │       ├── ProductRepository.php
-│   │   │       └── ProductFinder.php
+│   │   │   └── Program/
+│   │   │       ├── ProgramEloquentModel.php
+│   │   │       ├── ProgramRepository.php
+│   │   │       └── ProgramFinder.php
 │   │   └── Providers/
 │   │       └── InfrastructureServiceProvider.php  # Repository bindings
 │   │
 │   └── Http/
 │       ├── Controllers/
-│       │   └── ProductController.php
+│       │   └── ProgramController.php
 │       ├── Middleware/
 │       │   ├── CorrelationIdMiddleware.php
 │       │   └── AccessContextMiddleware.php
 │       ├── Requests/
-│       │   ├── CreateProductRequest.php
-│       │   └── UpdateProductRequest.php
+│       │   ├── CreateProgramRequest.php
+│       │   └── UpdateProgramRequest.php
 │       └── Resources/
-│           └── ProductResource.php
+│           └── ProgramResource.php
 │
 ├── database/
 │   ├── migrations/
 │   │   ├── 2026_01_01_000000_create_users_table.php
-│   │   └── 2026_01_01_000001_create_products_table.php
+│   │   ├── 2026_01_01_000001_create_programs_table.php
+│   │   ├── 2026_01_01_000002_create_password_reset_tokens_table.php
+│   │   ├── 2026_01_01_000003_create_jobs_table.php    # jobs, job_batches, failed_jobs
+│   │   └── 2026_01_01_000004_create_cache_table.php   # cache, cache_locks
 │   ├── factories/
 │   │   ├── UserFactory.php
-│   │   └── ProductFactory.php
+│   │   └── ProgramFactory.php
 │   └── seeders/
 │       ├── DatabaseSeeder.php      # Entry point for php artisan db:seed
 │       └── DevDataSeeder.php
 │
 ├── tests/
 │   ├── Unit/
-│   │   └── Product/
-│   │       └── ProductTest.php
+│   │   └── Program/
+│   │       └── ProgramTest.php
 │   ├── Feature/
-│   │   └── Product/
-│   │       └── CreateProductTest.php
+│   │   └── Program/
+│   │       ├── CreateProgramTest.php
+│   │       └── ProgramCrudTest.php  # GET list/show, PUT, DELETE coverage
 │   └── Architecture/
 │       ├── DomainLayerTest.php
 │       ├── ApplicationLayerTest.php
@@ -158,18 +163,21 @@ cp -r laravel-template/templates/. your-project/
 
 ```bash
 # After reading WorkedExample.md and understanding the patterns:
-rm -rf app/Domain/Product
-rm -rf app/Application/Product
-rm -rf app/Infrastructure/Persistence/Product
-rm -rf app/Http/Controllers/Product
-rm -rf app/Http/Requests/CreateProductRequest.php
-rm -rf app/Http/Requests/UpdateProductRequest.php
-rm -rf app/Http/Resources/ProductResource.php
-rm -rf database/migrations/2026_01_01_000001_create_products_table.php
-rm -rf database/factories/ProductFactory.php
-rm -rf tests/Unit/Product
-rm -rf tests/Feature/Product
+rm -rf app/Domain/Program
+rm -rf app/Application/Program
+rm -rf app/Application/Contracts/Finders/ProgramFinderInterface.php
+rm -rf app/Application/Contracts/Repositories/ProgramRepositoryInterface.php
+rm -rf app/Infrastructure/Persistence/Program
+rm -rf app/Http/Controllers/ProgramController.php
+rm -rf app/Http/Requests/CreateProgramRequest.php
+rm -rf app/Http/Requests/UpdateProgramRequest.php
+rm -rf app/Http/Resources/ProgramResource.php
+rm -rf database/migrations/2026_01_01_000001_create_programs_table.php
+rm -rf database/factories/ProgramFactory.php
+rm -rf tests/Unit/Program
+rm -rf tests/Feature/Program
 rm -rf e2e/api/programs.spec.ts
+# Remove the programs route from routes/api.php
 ```
 
 ### Step 3: Update `composer.json`

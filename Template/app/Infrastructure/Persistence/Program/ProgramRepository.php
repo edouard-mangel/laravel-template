@@ -30,7 +30,7 @@ final class ProgramRepository implements ProgramRepositoryInterface
 
     public function findById(ProgramId $id): ?Program
     {
-        $model = ProgramEloquentModel::withoutGlobalScopes()->find((string) $id);
+        $model = ProgramEloquentModel::find((string) $id);
 
         return $model !== null ? $this->toDomain($model) : null;
     }
