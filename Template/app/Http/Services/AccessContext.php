@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 final class AccessContext
 {
     private string $ownerId = '';
+
     private bool $isAdmin = false;
 
     public function setFromUser(Authenticatable $user): void

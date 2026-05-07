@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Facade;
+declare(strict_types=1);
+
+use App\Providers\AppServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 return [
     'name' => env('APP_NAME', 'Laravel'),
@@ -14,7 +17,7 @@ return [
     'key' => env('APP_KEY'),
     'cipher' => 'AES-256-CBC',
     'maintenance' => ['driver' => 'file'],
-    'providers' => Illuminate\Support\ServiceProvider::defaultProviders()->merge([
-        App\Providers\AppServiceProvider::class,
+    'providers' => ServiceProvider::defaultProviders()->merge([
+        AppServiceProvider::class,
     ])->toArray(),
 ];

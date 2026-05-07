@@ -15,7 +15,9 @@ final class UserEloquentModel extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

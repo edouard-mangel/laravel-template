@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Domain\Shared\Exceptions\InvalidInputException;
+use App\Domain\Shared\Exceptions\ResourceNotFoundException;
 use App\Http\Middleware\AccessContextMiddleware;
 use App\Http\Middleware\CorrelationIdMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use App\Domain\Shared\Exceptions\InvalidInputException;
-use App\Domain\Shared\Exceptions\ResourceNotFoundException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api: __DIR__ . '/../routes/api.php',
+        api: __DIR__.'/../routes/api.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {

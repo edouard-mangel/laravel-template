@@ -14,7 +14,9 @@ final class ProgramEloquentModel extends Model
     use HasFactory;
 
     protected $table = 'programs';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -29,7 +31,7 @@ final class ProgramEloquentModel extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope(app(OwnerScope::class));
+        self::addGlobalScope(app(OwnerScope::class));
     }
 
     protected static function newFactory(): ProgramFactory

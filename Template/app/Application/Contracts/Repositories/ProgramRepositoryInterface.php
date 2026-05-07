@@ -10,6 +10,8 @@ use App\Domain\Program\ProgramId;
 interface ProgramRepositoryInterface
 {
     public function save(Program $program): void;
+
     public function findById(ProgramId $id): ?Program;
+
     public function delete(ProgramId $id): void;
 }

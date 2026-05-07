@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Infrastructure\Persistence\Program\ProgramEloquentModel;
 use App\Infrastructure\Persistence\User\UserEloquentModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 arch('Application does not reference Infrastructure persistence')
     ->expect('App\Application')
     ->not->toUse('App\Infrastructure\Persistence');

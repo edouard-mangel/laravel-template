@@ -1,8 +1,10 @@
 <?php
 
-use App\Domain\Program\ProgramTitle;
+declare(strict_types=1);
+
 use App\Domain\Program\ProgramDescription;
 use App\Domain\Program\ProgramDuration;
+use App\Domain\Program\ProgramTitle;
 use App\Domain\Shared\Exceptions\InvalidInputException;
 
 describe('ProgramTitle', function (): void {
@@ -47,11 +49,11 @@ describe('ProgramDescription', function (): void {
     });
 });
 
-use App\Domain\Program\Program;
-use App\Domain\Program\ProgramId;
-use App\Domain\Program\ProgramGenre;
 use App\Domain\Program\Events\ProgramCreated;
 use App\Domain\Program\Events\ProgramUpdated;
+use App\Domain\Program\Program;
+use App\Domain\Program\ProgramGenre;
+use App\Domain\Program\ProgramId;
 
 describe('Program', function (): void {
     it('records a ProgramCreated event on create', function (): void {

@@ -19,10 +19,10 @@ final class OwnerScope implements Scope
             return;
         }
 
-        if (!$this->context->isInitialized()) {
+        if (! $this->context->isInitialized()) {
             return;
         }
 
-        $builder->where($model->getTable() . '.owner_id', $this->context->ownerId());
+        $builder->where($model->getTable().'.owner_id', $this->context->ownerId());
     }
 }

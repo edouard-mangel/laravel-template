@@ -12,5 +12,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface ProgramFinderInterface
 {
     public function findById(ProgramId $id): ?ProgramDto;
+
     public function findAll(ProgramFilter $filter): LengthAwarePaginator;
 }

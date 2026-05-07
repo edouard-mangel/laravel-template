@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 arch('Domain has no Illuminate imports')
     ->expect('App\Domain')
     ->not->toUse('Illuminate');

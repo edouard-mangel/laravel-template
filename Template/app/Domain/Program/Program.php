@@ -34,7 +34,7 @@ final class Program extends AggregateRoot
             programId: $id,
             title: $title->value,
             durationMinutes: $duration->minutes,
-            occurredAt: new DateTimeImmutable(),
+            occurredAt: new DateTimeImmutable,
         ));
 
         return $program;
@@ -64,14 +64,37 @@ final class Program extends AggregateRoot
             programId: $this->id,
             title: $title->value,
             durationMinutes: $duration->minutes,
-            occurredAt: new DateTimeImmutable(),
+            occurredAt: new DateTimeImmutable,
         ));
     }
 
-    public function id(): ProgramId { return $this->id; }
-    public function title(): ProgramTitle { return $this->title; }
-    public function description(): ProgramDescription { return $this->description; }
-    public function duration(): ProgramDuration { return $this->duration; }
-    public function genre(): ProgramGenre { return $this->genre; }
-    public function ownerId(): string { return $this->ownerId; }
+    public function id(): ProgramId
+    {
+        return $this->id;
+    }
+
+    public function title(): ProgramTitle
+    {
+        return $this->title;
+    }
+
+    public function description(): ProgramDescription
+    {
+        return $this->description;
+    }
+
+    public function duration(): ProgramDuration
+    {
+        return $this->duration;
+    }
+
+    public function genre(): ProgramGenre
+    {
+        return $this->genre;
+    }
+
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
 }

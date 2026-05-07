@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 arch('Actions have Action suffix')
     ->expect('App\Application\Program\Actions')
     ->classes()

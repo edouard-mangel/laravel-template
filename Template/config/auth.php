@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Infrastructure\Persistence\User\UserEloquentModel;
+
 return [
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
@@ -18,7 +22,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Infrastructure\Persistence\User\UserEloquentModel::class),
+            'model' => env('AUTH_MODEL', UserEloquentModel::class),
         ],
     ],
     'passwords' => [

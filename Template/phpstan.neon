@@ -6,7 +6,6 @@ parameters:
     paths:
         - app
     excludePaths:
-        - app/Http/Middleware/TrustProxies.php
     checkMissingIterableValueType: false
     ignoreErrors:
         - '#Unsafe usage of new static\(\)#'
