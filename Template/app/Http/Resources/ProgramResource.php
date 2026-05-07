@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 final class ProgramResource extends JsonResource
 {
+    /** @return array<string, mixed> */
     public function toArray($request): array
     {
         /** @var ProgramDto $dto */

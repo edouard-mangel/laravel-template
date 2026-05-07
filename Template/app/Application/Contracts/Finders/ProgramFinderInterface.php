@@ -13,5 +13,6 @@ interface ProgramFinderInterface
 {
     public function findById(ProgramId $id): ?ProgramDto;
 
+    /** @return LengthAwarePaginator<int, ProgramDto> */
     public function findAll(ProgramFilter $filter): LengthAwarePaginator;
 }

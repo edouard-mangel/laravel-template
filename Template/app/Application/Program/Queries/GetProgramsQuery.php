@@ -14,6 +14,7 @@ final class GetProgramsQuery
         private readonly ProgramFinderInterface $finder,
     ) {}
 
+    /** @return \Illuminate\Pagination\LengthAwarePaginator<int, \App\Application\Program\ProgramDto> */
     public function handle(ProgramFilter $filter): LengthAwarePaginator
     {
         return $this->finder->findAll($filter);

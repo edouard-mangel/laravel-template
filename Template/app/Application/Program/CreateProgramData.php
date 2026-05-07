@@ -23,7 +23,7 @@ final readonly class CreateProgramData
             description: $request->validated('description'),
             durationMinutes: $request->validated('duration_minutes'),
             genre: $request->validated('genre'),
-            ownerId: $request->user()->id,
+            ownerId: (string) ($request->user()?->getAuthIdentifier() ?? ''),
         );
     }
 }

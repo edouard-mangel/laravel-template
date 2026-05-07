@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class ProgramEloquentModel extends Model
 {
+    /** @use HasFactory<ProgramFactory> */
     use HasFactory;
 
     protected $table = 'programs';

@@ -19,6 +19,7 @@ final class ProgramFinder implements ProgramFinderInterface
         return $model !== null ? $this->toDto($model) : null;
     }
 
+    /** @return LengthAwarePaginator<int, ProgramDto> */
     public function findAll(ProgramFilter $filter): LengthAwarePaginator
     {
         $query = ProgramEloquentModel::query();

@@ -11,11 +11,12 @@ final class UpdateProgramRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $program = ProgramEloquentModel::withoutGlobalScopes()->find($this->route('program'));
+        $program = ProgramEloquentModel::withoutGlobalScopes()->where('id', $this->route('program'))->first();
 
         return $program !== null && $this->user()?->getAuthIdentifier() === $program->owner_id;
     }
 
+    /** @return array<string, list<string>> */
     public function rules(): array
     {
         return [
